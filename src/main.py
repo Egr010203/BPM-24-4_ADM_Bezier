@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .bezier import Point
+from .bezier import Point, cubic_bezier, bezier_coefficients, plot_elementary_curve
 from .composite_curve import Segment
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -43,19 +43,33 @@ SCALE_CENTER: Point = (0.0, 4.0)
 SCALES = [0.5, 1, 1.5, 2]
 
 
-def main() -> None:
-    """Run all calculations and save images.
+def run_task_31() -> None:
+    """Task 3.1 — elementary cubic Bezier curve (Person 2)."""
+    P0, P1, P2, P3 = ELEMENTARY_CONTROL_POINTS
 
-    Full implementation will be added by Person 2, Person 3 and Person 4.
-    """
+    print("=== Задание 3.1: элементарная кубическая кривая Безье ===")
+    print(f"Контрольные точки: P0={P0}, P1={P1}, P2={P2}, P3={P3}")
+
+    coeff_x, coeff_y = bezier_coefficients(P0, P1, P2, P3)
+    print("\nКоэффициентная форма:")
+    print(f"  x(t) = {coeff_x[0]:.4f}*t^3 + {coeff_x[1]:.4f}*t^2 + {coeff_x[2]:.4f}*t + {coeff_x[3]:.4f}")
+    print(f"  y(t) = {coeff_y[0]:.4f}*t^3 + {coeff_y[1]:.4f}*t^2 + {coeff_y[2]:.4f}*t + {coeff_y[3]:.4f}")
+
+    curve = cubic_bezier(P0, P1, P2, P3, n=200)
+
+    save_path = str(IMAGES_DIR / "elementary_curve.png")
+    plot_elementary_curve(curve, [P0, P1, P2, P3], save_path)
+    print("Задание 3.1 выполнено.\n")
+
+
+def main() -> None:
+    """Run all calculations and save images."""
     IMAGES_DIR.mkdir(exist_ok=True)
-    print("Project structure is ready.")
-    print("Selected contour for task 3.2: stylized flame.")
-    print("Next steps:")
-    print("1. Implement cubic_bezier() in src/bezier.py")
-    print("2. Implement composite_bezier() in src/composite_curve.py")
-    print("3. Implement scale_points() and plotting in src/scaling.py")
-    print("4. Save generated images to images/")
+
+    run_task_31()
+
+    # Tasks 3.2: composite curve and scaling — implemented by Person 3 and Person 4.
+    print("Задания 3.2 (составная кривая и масштабирование) ожидают реализации от Человека 3 и Человека 4.")
 
 
 if __name__ == "__main__":
