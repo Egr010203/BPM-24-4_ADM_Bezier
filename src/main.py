@@ -9,7 +9,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from .bezier import Point, cubic_bezier, bezier_coefficients, plot_elementary_curve
-from .composite_curve import Segment
+from .composite_curve import Segment, composite_bezier, validate_segments
+from .scaling import scale_points, plot_scaled_curve
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 IMAGES_DIR = PROJECT_ROOT / "images"
@@ -22,20 +23,26 @@ ELEMENTARY_CONTROL_POINTS: tuple[Point, Point, Point, Point] = (
     (4, 0),
 )
 
-# Selected contour for task 3.2: stylized flame.
-# The contour consists of four cubic Bezier segments.
+# Selected contour for task 3.2: stylized flame with multiple tongues.
+# The contour consists of six cubic Bezier segments to form three flames.
 FLAME_SEGMENTS: list[Segment] = [
-    # Segment 1: lower left part of the flame.
-    ((0.0, 0.0), (-2.0, -0.2), (-2.8, 2.5), (-1.2, 4.5)),
+    # Segment 1: base to left tongue tip
+    ((0.0, 0.0), (-2.0, 1.0), (-2.5, 3.0), (-1.5, 4.0)),
 
-    # Segment 2: left upper part leading to the top point.
-    ((-1.2, 4.5), (-1.0, 5.8), (-0.5, 7.0), (0.0, 8.0)),
+    # Segment 2: left tongue tip down to the left valley
+    ((-1.5, 4.0), (-1.0, 3.0), (-0.8, 3.0), (-0.5, 3.5)),
 
-    # Segment 3: top point and right upper part.
-    ((0.0, 8.0), (0.8, 6.8), (2.0, 5.5), (1.4, 3.8)),
+    # Segment 3: left valley up to the main central tongue tip
+    ((-0.5, 3.5), (-0.5, 5.0), (-0.2, 7.0), (0.2, 8.0)),
 
-    # Segment 4: lower right part and closing the contour.
-    ((1.4, 3.8), (2.8, 2.0), (2.2, 0.2), (0.0, 0.0)),
+    # Segment 4: main central tongue tip down to the right valley
+    ((0.2, 8.0), (0.5, 6.0), (0.8, 4.0), (1.0, 3.5)),
+
+    # Segment 5: right valley up to the right tongue tip
+    ((1.0, 3.5), (1.5, 3.5), (2.0, 4.5), (2.2, 5.0)),
+
+    # Segment 6: right tongue tip down to the base, closing the contour
+    ((2.2, 5.0), (2.5, 3.0), (1.5, 0.5), (0.0, 0.0)),
 ]
 
 # Approximate scaling center for the flame contour.
@@ -62,14 +69,33 @@ def run_task_31() -> None:
     print("Задание 3.1 выполнено.\n")
 
 
+def run_task_32() -> None:
+    """Task 3.2 — composite flame curve and scaling (Persons 3 & 4)."""
+    print("=== Задание 3.2: составная кривая (пламя) и масштабирование ===")
+
+    if not validate_segments(FLAME_SEGMENTS):
+        print("Ошибка: Сегменты составной кривой не связаны корректно.")
+        return
+
+    # 1. Построение базовой составной кривой (масштаб 1)
+    points_base = composite_bezier(FLAME_SEGMENTS, n=150)
+
+    # 2. Масштабирование и визуализация
+    for k in SCALES:
+        scaled_points = scale_points(points_base, SCALE_CENTER, k)
+        save_path = str(IMAGES_DIR / f"flame_scale_{k}.png")
+        plot_scaled_curve(scaled_points, k, save_path)
+        print(f"Масштаб {k:3}: сохранено в {save_path}")
+
+    print("Задание 3.2 выполнено.\n")
+
+
 def main() -> None:
     """Run all calculations and save images."""
     IMAGES_DIR.mkdir(exist_ok=True)
 
     run_task_31()
-
-    # Tasks 3.2: composite curve and scaling — implemented by Person 3 and Person 4.
-    print("Задания 3.2 (составная кривая и масштабирование) ожидают реализации от Человека 3 и Человека 4.")
+    run_task_32()
 
 
 if __name__ == "__main__":

@@ -10,6 +10,8 @@ import numpy as np
 from .bezier import Point
 
 
+import matplotlib.pyplot as plt
+
 def scale_points(points: np.ndarray, center: Point, k: float) -> np.ndarray:
     """Scale points relative to the selected center.
 
@@ -24,11 +26,19 @@ def scale_points(points: np.ndarray, center: Point, k: float) -> np.ndarray:
     Returns:
         Scaled points with shape (n, 2).
     """
-    # TODO: Person 4 implements this function.
-    raise NotImplementedError("Implement point scaling.")
+    c = np.array(center)
+    return c + k * (points - c)
 
 
 def plot_scaled_curve(points: np.ndarray, scale: float, save_path: str) -> None:
     """Plot and save one scaled curve version."""
-    # TODO: Person 4 implements this function.
-    raise NotImplementedError("Implement scaled curve plotting.")
+    plt.figure(figsize=(8, 8))
+    plt.plot(points[:, 0], points[:, 1], 'r-', label=f'Масштаб {scale}')
+    plt.title(f'Стилизованное пламя (масштаб {scale})')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.grid(True)
+    plt.legend()
+    plt.axis('equal')
+    plt.savefig(save_path)
+    plt.close()
