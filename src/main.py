@@ -10,7 +10,7 @@ from pathlib import Path
 
 from .bezier import Point, cubic_bezier, bezier_coefficients, plot_elementary_curve
 from .composite_curve import Segment, composite_bezier, validate_segments
-from .scaling import scale_points, plot_scaled_curve
+from .scaling import scale_points, plot_scaled_curve, plot_scaled_versions
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 IMAGES_DIR = PROJECT_ROOT / "images"
@@ -80,12 +80,8 @@ def run_task_32() -> None:
     # 1. Построение базовой составной кривой (масштаб 1)
     points_base = composite_bezier(FLAME_SEGMENTS, n=150)
 
-    # 2. Масштабирование и визуализация
-    for k in SCALES:
-        scaled_points = scale_points(points_base, SCALE_CENTER, k)
-        save_path = str(IMAGES_DIR / f"flame_scale_{k}.png")
-        plot_scaled_curve(scaled_points, k, save_path)
-        print(f"Масштаб {k:3}: сохранено в {save_path}")
+    # 2. Масштабирование и визуализация (все масштабы + сравнительный график)
+    plot_scaled_versions(points_base, SCALES, IMAGES_DIR, center=SCALE_CENTER)
 
     print("Задание 3.2 выполнено.\n")
 
