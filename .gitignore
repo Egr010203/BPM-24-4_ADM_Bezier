@@ -15,12 +15,6 @@ env/
 .DS_Store
 Thumbs.db
 
-# Generated output
-images/*.png
-images/*.jpg
-images/*.jpeg
-images/*.svg
-
 # Keep folders in repository
 !images/.gitkeep
 !report/.gitkeep
