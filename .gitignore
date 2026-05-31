@@ -11,6 +11,7 @@ env/
 .vscode/
 .idea/
 
+*.pptx
 # OS
 .DS_Store
 Thumbs.db
@@ -19,4 +20,3 @@ Thumbs.db
 !images/.gitkeep
 !report/.gitkeep
 !presentation/.gitkeep
-!presentation/.pptx
